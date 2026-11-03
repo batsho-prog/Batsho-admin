@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7C3AED">
+<meta name="robots" content="noindex">
+<title>إدارة Batsho</title>
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+:root{--p:#7C3AED;--p2:#A855F7;--k:#22B8F5;--bg:#F5F4FB;--c:#fff;--t:#1B1B2F;--m:#6B7280;--l:#ECE9FA;--ok:#16A34A;--bad:#DC2626;--wn:#D97706;--sh:0 1px 2px rgba(60,40,120,.06),0 8px 24px rgba(60,40,120,.07);--g:linear-gradient(135deg,#22B8F5,#7C3AED 60%,#A855F7)}
+@media(prefers-color-scheme:dark){:root{--bg:#100E1C;--c:#1A1730;--t:#F3F4F6;--m:#9CA3AF;--l:#2A2548;--sh:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.25)}}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}body{font-family:Tajawal,system-ui,sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.5}
+button,input,textarea,select{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+a{color:var(--p)}
+#app{height:100%}
+.ic{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.shell{height:100%;display:flex}
+.col{flex:1;min-width:0;display:flex;flex-direction:column;height:100%}
+.top{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 8px}
+.top .tt{flex:1;min-width:0}.top h1{font-size:21px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{width:40px;height:40px;border-radius:13px;background:var(--c);box-shadow:var(--sh);display:grid;place-items:center;color:var(--p);flex:none}
+main{flex:1;overflow-y:auto;padding:4px 14px 24px}.wrap{max-width:880px;margin:auto}
+.bar{display:flex;background:var(--c);border-top:1px solid var(--l);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bar button{flex:1;padding:9px 2px 7px;font-size:11px;color:var(--m);display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;font-weight:500}
+.bar .on{color:var(--p);font-weight:700}.bar .on::before{content:"";position:absolute;top:0;width:26px;height:3px;border-radius:0 0 4px 4px;background:var(--g)}
+.bd{position:absolute;top:3px;inset-inline-start:calc(50% + 6px);min-width:17px;height:17px;border-radius:9px;background:var(--bad);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;padding:0 4px}
+.side{display:none;width:256px;flex:none;background:var(--c);border-inline-end:1px solid var(--l);padding:20px 12px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;font-weight:800;font-size:18px}.brand img{width:38px;height:38px;border-radius:11px}
+.side button{display:flex;align-items:center;gap:11px;width:100%;padding:10px 12px;border-radius:13px;color:var(--m);font-weight:500;margin-bottom:2px;position:relative}
+.side button:hover{background:var(--bg)}.side .on{background:var(--l);color:var(--p);font-weight:700}
+.side .bd{position:static;margin-inline-start:auto}
+.side .sp{font-size:12px;color:var(--m);padding:14px 12px 6px;opacity:.8}
+@media(min-width:900px){.side{display:block}.bar{display:none}main{padding:6px 28px 32px}.top{padding-inline:28px}.w4{grid-template-columns:repeat(4,1fr)!important}}
+.card{background:var(--c);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.hero{background:var(--g);color:#fff;border-radius:24px;padding:20px;margin-bottom:12px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(124,58,237,.3)}
+.hero::after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.12);top:-60px;inset-inline-end:-40px}
+.hero h2{font-size:22px;font-weight:800}.hero p{opacity:.9;margin-top:2px}
+.item{display:flex;align-items:center;gap:12px;background:var(--c);border-radius:18px;padding:12px;margin-bottom:10px;width:100%;text-align:start;box-shadow:var(--sh)}
+button.item:active{transform:scale(.99)}
+.tx{flex:1;min-width:0}.tx b{display:block;font-weight:700}.tx small{color:var(--m);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.av{width:46px;height:46px;border-radius:50%;object-fit:cover;display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px;flex:none;background:var(--g)}.av.lg{width:72px;height:72px;font-size:28px}
+.chipi{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none;color:#fff}
+.btn{background:var(--g);color:#fff;border-radius:13px;padding:11px 16px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn[disabled]{opacity:.5;pointer-events:none}.sm{padding:7px 12px;font-size:13px;border-radius:11px}
+.red{background:var(--bad)}.gr{background:var(--ok)}.gh{background:var(--l);color:var(--p)}.gh.dn{color:var(--bad);background:rgba(220,38,38,.1)}
+.acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.acts>*{flex:1;min-width:120px}
+.empty{text-align:center;color:var(--m);padding:44px 20px}.empty .ic{opacity:.45;margin-bottom:8px}
+.warn{background:#FEF3C7;color:#92400E;border-radius:14px;padding:11px 13px;font-size:13px;margin-bottom:12px}
+.fld{width:100%;background:var(--bg);border:1px solid var(--l);border-radius:13px;padding:12px;cursor:text;margin-top:8px;display:block}.fld:focus{outline:2px solid var(--p2);outline-offset:-1px}
+select.fld{cursor:pointer}.lbl{display:block;margin-top:12px;font-size:13px;color:var(--m)}
+.sec{font-weight:800;margin:16px 2px 10px;display:flex;align-items:center;gap:8px}.sec span{flex:1}
+.pill{display:inline-flex;align-items:center;border-radius:9px;padding:2px 9px;font-size:12px;background:var(--l);color:var(--p);font-weight:700}
+.pill.ok{background:rgba(22,163,74,.13);color:var(--ok)}.pill.bad{background:rgba(220,38,38,.12);color:var(--bad)}.pill.warn{background:rgba(217,119,6,.14);color:var(--wn)}
+.chk{display:flex;align-items:center;gap:8px;margin-top:14px}.chk input{width:20px;height:20px;margin:0}
+.seg{display:flex;background:var(--l);border-radius:14px;padding:4px;margin-bottom:12px}.seg button{flex:1;padding:8px;border-radius:11px;font-weight:700;color:var(--m)}.seg .on{background:var(--c);color:var(--p);box-shadow:var(--sh)}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+.stat{background:var(--c);border-radius:20px;padding:14px;box-shadow:var(--sh)}.stat .chipi{width:38px;height:38px;border-radius:12px;margin-bottom:10px}
+.stat b{font-size:24px;font-weight:800;display:block;line-height:1.2}.stat small{color:var(--m);font-size:12px}.stat i{font-style:normal;font-size:12px;color:var(--ok);font-weight:700}
+.alerts{display:grid;gap:10px;margin-bottom:12px}
+.chart{width:100%;height:auto;display:block;margin-top:8px}.chart text{fill:var(--m);font-size:9px;font-family:Tajawal}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--l)}.kv:last-child{border:0}.kv span{color:var(--m)}
+.big{width:100%;border-radius:14px;margin-top:10px;background:#000}
+.nt{background:var(--bg);border-radius:16px;padding:12px;display:flex;gap:10px;margin-top:10px;border:1px solid var(--l)}.nt img{width:36px;height:36px;border-radius:9px}
+.login{min-height:100%;display:grid;place-items:center;padding:24px;background:var(--g)}
+.lcard{background:var(--c);border-radius:28px;padding:28px 22px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.lcard img{width:84px;border-radius:22px;margin:0 auto}.lcard h1{font-size:23px;font-weight:800}.lcard p{color:var(--m)}
+.g{background:#fff;color:#1F2937;border:1px solid var(--l)}
+.mdb{position:fixed;inset:0;background:rgba(10,8,25,.5);z-index:20;backdrop-filter:blur(2px)}
+.mds{position:fixed;z-index:21;inset-inline:0;bottom:0;margin:auto;max-width:520px;background:var(--c);border-radius:26px 26px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.25);max-height:86%;overflow-y:auto;animation:up .22s ease}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@media(min-width:900px){.mds{bottom:auto;top:50%;transform:translateY(-50%);border-radius:26px;animation:none}}
+.mdh{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;margin-bottom:8px}.mic{width:40px;height:40px;border-radius:13px;background:var(--l);color:var(--p);display:grid;place-items:center}.mic.bad{background:rgba(220,38,38,.12);color:var(--bad)}
+.mdt{color:var(--m);line-height:1.8}.mdt b{color:var(--t)}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}.mg button{background:var(--bg);border-radius:18px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:12px;font-weight:700;position:relative}.mg .bd{top:6px}
+.msg{padding:8px 0;border-bottom:1px solid var(--l);font-size:14px}.msg:last-child{border:0}.msg small{color:var(--m)}
+.spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--l);border-top-color:var(--p);animation:sp .8s linear infinite;margin:auto}@keyframes sp{to{transform:rotate(360deg)}}
+.boot{height:100%;display:grid;place-items:center}
+#tt{position:fixed;bottom:96px;inset-inline:0;margin:auto;width:max-content;max-width:88%;background:#111827;color:#fff;padding:11px 18px;border-radius:22px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:30;font-weight:500}#tt.on{opacity:1}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></symbol>
+<symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2c-.6-.8-1.6-1.2-2.8-1.2-1.7 0-2.8.9-2.8 2.1 0 3 5.8 1.4 5.8 4.4 0 1.2-1.1 2.1-2.9 2.1-1.2 0-2.3-.5-2.9-1.3M12 6v2m0 8v2"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.4c2 .7 3.5 2.4 3.5 5.6"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h12l-2 4 2 4H5"/></symbol>
+<symbol id="i-live" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="3"/><path d="m22 8-6 4 6 4z"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8c-1.5-4-6-3.5-5 0 .3 1 2.5 1 5 0zm0 0c1.5-4 6-3.5 5 0-.3 1-2.5 1-5 0z"/></symbol>
+<symbol id="i-hash" viewBox="0 0 24 24"><path d="M5 9h14M5 15h14M10 4 8 20M16 4l-2 16"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></symbol>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></symbol>
+<symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 4H5v16h5"/><path d="m15 8 4 4-4 4M19 12H9"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+<symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="m4 18 5-5 4 4 3-3 4 4"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
+<symbol id="i-idcard" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2.2"/><path d="M5.5 16c.5-1.6 1.8-2.4 3.5-2.4s3 .8 3.5 2.4M14 10h4M14 14h3"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10 14"/><path d="m21 3-7 18-4-7-7-4z"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3 2 20h20z"/><path d="M12 10v5M12 17.5v.5"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17v.5"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></symbol>
+</defs></svg>
+<div id="app"></div><div id="md"></div><div id="tt"></div>
+<script>
+const SB_URL='https://whjyruxlcxgwivyuntub.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndoanlydXhsY3hnd2l2eXVudHViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzODY3NDIsImV4cCI6MjEwODk2Mjc0Mn0.5Mb3qEyfQ5bIFwOl6YvltfSPjdpuKYtya9ENtkbD-6k';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const PUSH_FN='admin-push';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ic=(n,s=20)=>`<svg class="ic" width="${s}" height="${s}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const msg=e=>String((e&&(e.message||e.error_description))||e||'').slice(0,100);
+const num=n=>Number(n||0).toLocaleString('en-US');
+const money=(c,cur)=>(Number(c||0)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+esc(cur||'');
+const ago=d=>{if(!d)return'—';const m=Math.max(0,Math.round((Date.now()-new Date(d))/60000));return m<1?'الآن':m<60?m+' د':m<1440?Math.round(m/60)+' س':Math.round(m/1440)+' يوم'};
+const dte=d=>{try{return new Date(d).toLocaleDateString('ar-EG-u-nu-latn',{day:'numeric',month:'short'})}catch(e){return''}};
+const age=d=>Math.floor((Date.now()-new Date(d))/31557600000);
+const NAV=[
+{k:'home',t:'الرئيسية',i:'home',g:'main'},{k:'pay',t:'طلبات الشحن',s:'الشحن',i:'coin',g:'main'},{k:'users',t:'المستخدمون',i:'users',g:'main'},{k:'ntf',t:'الإشعارات',i:'bell',g:'main'},
+{k:'reqs',t:'طلبات الموديلز',i:'idcard',g:'more'},{k:'models',t:'الموديلز',i:'star',g:'more'},{k:'live',t:'البثوث الآن',s:'البثوث',i:'live',g:'more'},{k:'rep',t:'البلاغات',i:'flag',g:'more'},
+{k:'gifts',t:'الهدايا',i:'gift',g:'more'},{k:'rooms',t:'الغرف',i:'hash',g:'more'},{k:'cfg',t:'الباقات وحسابات الدفع',s:'الباقات',i:'sliders',g:'more'},
+{k:'admins',t:'المديرون',i:'shield',g:'more'},{k:'log',t:'سجل العمليات',s:'السجل',i:'doc',g:'more'},{k:'diag',t:'التشخيص',i:'pulse',g:'more'}];
+const AUD={all:'كل الحسابات',models:'الموديلز فقط',user:'حساب محدد'};
+const STS={approved:['معتمد','ok'],paid:['معتمد','ok'],rejected:['مرفوض','bad'],pending:['معلّق','warn']};
+const ACT={approve_order:'اعتماد طلب شحن',reject_order:'رفض طلب شحن',adjust_coins:'تعديل رصيد',ban:'حظر حساب',unban:'رفع حظر',delete_user:'حذف حساب',notify:'إرسال إشعار',model_approve:'قبول موديل',model_reject:'رفض موديل',model_revoke:'إلغاء موديل',end_live:'إنهاء بث',delete_room:'حذف غرفة',create_room:'إنشاء غرفة',gift_save:'حفظ هدية',gift_delete:'حذف هدية',package_save:'حفظ باقة',package_delete:'حذف باقة',account_save:'حفظ حساب دفع',account_delete:'حذف حساب دفع',admin_add:'إضافة مدير',admin_remove:'إزالة مدير'};
+const fresh=()=>({user:null,admin:false,page:'home',more:false,sub:null,busy:true,act:false,cnt:{pay:0,reqs:0,rep:0},st:null,stErr:null,list:[],ptab:'new',arch:[],archErr:null,
+hist:[],cfg:{pk:[],ac:[]},gifts:[],rooms:[],admins:[],logs:[],diag:null,users:[],uq:'',aq:'',ares:[],nm:{},dl:null,
+nf:{aud:'all',user:null,q:'',res:[],title:'',body:'',sending:false}});
+let S=fresh();
+function toast(t){const e=$('#tt');e.textContent=t;e.className='on';clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='',3000)}
+async function once(fn){if(S.act)return;S.act=true;try{return await fn()}finally{S.act=false}}
+function logAct(a,t,d){try{sb.from('admin_log').insert({action:a,target:t==null?null:String(t),detail:d||null}).then(()=>{},()=>{})}catch(e){}}
+const av=(p,c='')=>p&&p.avatar_url?`<img class="av ${c}" src="${esc(p.avatar_url)}" alt="">`:`<span class="av ${c}">${esc(((p&&p.name)||'؟')[0])}</span>`;
+const chip=(i,col)=>`<span class="chipi" style="background:${col}">${ic(i,22)}</span>`;
+const empty=(t,i='check')=>`<div class="empty">${ic(i,40)}<div>${esc(t)}</div></div>`;
+const loading='<div class="empty"><div class="spin"></div></div>';
+const item=(lead,title,sub,end,a='')=>{const inner=`${lead}<div class="tx"><b>${title}</b><small>${sub||''}</small></div>${end||''}`;return a?`<button class="item" ${a}>${inner}</button>`:`<div class="item">${inner}</div>`};
+const pill=(t,c='')=>`<span class="pill ${c}">${esc(t)}</span>`;
+
+/* ---------- نافذة الحوار ---------- */
+function dlg(o){return new Promise(res=>{S.dl={res};
+$('#md').innerHTML=`<div class="mdb" data-a="md-no"></div><div class="mds" role="dialog"><div class="mdh">${o.icon?`<span class="mic ${o.danger?'bad':''}">${ic(o.icon,22)}</span>`:''}<span>${esc(o.title)}</span></div>${o.text?`<div class="mdt">${o.text}</div>`:''}${(o.fields||[]).map(f=>`<input class="fld" data-f="${f.k}" type="${f.type||'text'}" ${f.type=='number'?'inputmode="decimal" min="0"':''} placeholder="${esc(f.ph||'')}" value="${esc(f.val||'')}" autocomplete="off">`).join('')}<div class="acts"><button class="btn ${o.danger?'red':''}" data-a="md-ok">${esc(o.ok||'تأكيد')}</button>${o.noCancel?'':'<button class="btn gh" data-a="md-no">إلغاء</button>'}</div></div>`})}
+function dlgClose(v){const d=S.dl;S.dl=null;$('#md').innerHTML='';if(d)d.res(v)}
+function ask(title,text,ok,danger){return dlg({title,text,ok,danger,icon:danger?'warn':'help'}).then(v=>!!v)}
+
+/* ---------- الواجهة العامة ---------- */
+function loginV(){return`<div class="login"><div class="lcard"><img src="icon-192.png" alt=""><h1>إدارة Batsho</h1><p>سجّل الدخول بحساب المدير</p><button class="btn g" data-a="google"><b style="color:#4285F4;font-size:18px">G</b> الدخول عبر Google</button><input class="fld" type="email" id="em" placeholder="البريد" dir="ltr"><input class="fld" type="password" id="pw" placeholder="كلمة المرور" dir="ltr"><button class="btn" data-a="login">دخول بالبريد</button></div></div>`}
+function denyV(){return`<div class="login"><div class="lcard"><span class="mic bad" style="margin:auto;width:60px;height:60px">${ic('ban',30)}</span><h1>لا توجد صلاحية</h1><p>هذا الحساب غير مسجّل كمدير.</p><button class="btn" data-a="out">تسجيل الخروج</button></div></div>`}
+const bdv=k=>{const n=k=='more'?(S.cnt.reqs+S.cnt.rep):S.cnt[k=='reqs'?'reqs':k=='rep'?'rep':k=='pay'?'pay':'']||0;return n?`<span class="bd">${n>99?'99+':n}</span>`:''};
+function sideHtml(){let g='';return`<div class="brand"><img src="icon-192.png" alt="">Batsho</div>${NAV.map(n=>{const h=n.g!=g&&n.g=='more'?'<div class="sp">المزيد</div>':'';g=n.g;return h+`<button class="${n.k==S.page?'on':''}" data-a="go" data-k="${n.k}">${ic(n.i,20)}<span>${n.t}</span>${bdv(n.k)}</button>`}).join('')}<button data-a="out" style="margin-top:14px;color:var(--bad)">${ic('logout',20)}<span>تسجيل الخروج</span></button>`}
+function barHtml(){const more=!NAV.slice(0,4).some(n=>n.k==S.page);return NAV.slice(0,4).map(n=>`<button class="${n.k==S.page?'on':''}" data-a="go" data-k="${n.k}">${ic(n.i,22)}${n.s||n.t}${bdv(n.k)}</button>`).join('')+`<button class="${more?'on':''}" data-a="more">${ic('grid',22)}المزيد${bdv('more')}</button>`}
+function renderNav(){const a=$('#side'),b=$('#bar');if(a)a.innerHTML=sideHtml();if(b)b.innerHTML=barHtml()}
+function moreSheet(){return`<div class="mdb" data-a="more-x"></div><div class="mds"><div class="mdh"><span>المزيد</span></div><div class="mg">${NAV.slice(4).map(n=>`<button data-a="go" data-k="${n.k}"><span class="chipi" style="background:var(--g)">${ic(n.i,22)}</span>${n.s||n.t}${bdv(n.k)}</button>`).join('')}<button data-a="out"><span class="chipi" style="background:var(--bad)">${ic('logout',22)}</span>خروج</button></div></div>`}
+function subTitle(){const s=S.sub;if(!s)return'';if(s.k=='order'||s.k=='arch')return'طلب شحن';if(s.k=='req')return'طلب موديل';if(s.k=='user')return(s.p&&s.p.name)||'حساب';if(s.k=='ed')return(s.row?'تعديل ':'إضافة ')+ED[s.t].t;return''}
+function render(){const a=$('#app');
+if(S.busy&&!S.user){a.innerHTML='<div class="boot"><div class="spin"></div></div>';return}
+if(!S.user){a.innerHTML=loginV();return}
+if(!S.admin){a.innerHTML=denyV();return}
+const cur=NAV.find(n=>n.k==S.page)||NAV[0];
+a.innerHTML=`<div class="shell"><aside class="side" id="side">${sideHtml()}</aside><div class="col"><header class="top">${S.sub?`<button class="ib" data-a="back" aria-label="رجوع">${ic('back',22)}</button>`:''}<div class="tt"><h1>${esc(subTitle()||cur.t)}</h1></div><button class="ib" data-a="refresh" aria-label="تحديث">${ic('refresh',20)}</button></header><main><div class="wrap">${S.sub?subView():pageView()}</div></main><nav class="bar" id="bar">${barHtml()}</nav></div></div>${S.more?moreSheet():''}`}
+function pageView(){if(S.busy)return loading;const p=S.page;
+return p=='home'?vHome():p=='pay'?vPay():p=='users'?vUsers():p=='ntf'?vNtf():p=='reqs'?vReqs():p=='models'?vModels():p=='live'?vLive():p=='rep'?vRep():p=='gifts'?vGifts():p=='rooms'?vRooms():p=='cfg'?vCfg():p=='admins'?vAdmins():p=='log'?vLog():vDiag()}
+function subView(){const s=S.sub;return s.k=='order'?vOrder():s.k=='arch'?vArch():s.k=='req'?vReq():s.k=='user'?vUser():vEd()}
+
+/* ---------- الرئيسية والإحصائيات ---------- */
+function bars(rows,id,fmt){if(!rows.length)return'';const mx=Math.max(1,...rows.map(r=>r.v)),W=320,H=90,bw=W/rows.length;
+return`<svg class="chart" viewBox="0 0 ${W} ${H+22}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A855F7"/><stop offset="1" stop-color="#22B8F5"/></linearGradient></defs>${rows.map((r,i)=>{const h=r.v?Math.max(4,r.v/mx*H):2,x=i*bw+bw/2;return`<rect x="${(i*bw+3).toFixed(1)}" y="${(H-h+10).toFixed(1)}" width="${(bw-6).toFixed(1)}" height="${h.toFixed(1)}" rx="4" fill="url(#${id})" opacity="${r.v?1:.25}"/>${r.v?`<text x="${x.toFixed(1)}" y="${(H-h+7).toFixed(1)}" text-anchor="middle">${esc(fmt?fmt(r.v):r.v)}</text>`:''}${i%3==0||i==rows.length-1?`<text x="${x.toFixed(1)}" y="${H+20}" text-anchor="middle">${esc(r.l)}</text>`:''}`}).join('')}</svg>`}
+function stat(i,col,l,v,sub){return`<div class="stat">${chip(i,col)}<b>${v}</b><small>${l}</small>${sub?`<br><i>${sub}</i>`:''}</div>`}
+function vHome(){const s=S.st,c=S.cnt;
+const al=[['pay','coin','#16A34A','طلبات شحن بانتظار المراجعة',c.pay],['reqs','idcard','#7C3AED','طلبات موديلز جديدة',c.reqs],['rep','flag','#DC2626','بلاغات مفتوحة',c.rep]].filter(x=>x[4]);
+let h=`<div class="hero"><h2>نظرة عامة</h2><p>ملخص نشاط Batsho</p></div>`;
+if(al.length)h+=`<div class="alerts">${al.map(a=>item(chip(a[1],a[2]),num(a[4]),a[3],`<span style="color:var(--m)">${ic('chev',20)}</span>`,`data-a="go" data-k="${a[0]}"`)).join('')}</div>`;
+if(S.stErr)return h+`<div class="warn">تعذر تحميل الإحصائيات: ${esc(S.stErr)}<br>تأكد من تشغيل ملف admin-setup.sql.</div>`;
+if(!s)return h;
+const rev=(s.revenue||[]).filter(r=>r.cents);
+h+=`<div class="grid2 w4">${stat('users','#7C3AED','المستخدمون',num(s.users_total),s.users_today?'+'+num(s.users_today)+' اليوم':'')}${stat('pulse','#16A34A','متصلون الآن',num(s.online_now))}${stat('star','#F59E0B','الموديلز',num(s.models_total))}${stat('live','#EF4444','بثوث مباشرة',num(s.lives_active))}</div>
+<div class="grid2 w4">${stat('coin','#0EA5E9','المبيعات',rev.length?rev.map(r=>money(r.cents,r.currency)).join('<br>'):'—','طلبات معتمدة: '+num((s.orders||{}).approved))}${stat('trend','#8B5CF6','عملات مباعة',num(s.coins_sold))}${stat('gift','#EC4899','هدايا مُرسلة',num(s.gifts_count),num(s.gifts_coins)+' عملة')}${stat('flag','#DC2626','بلاغات مفتوحة',num(s.reports_open))}</div>`;
+const su=(s.signups||[]).map(r=>({l:dte(r.d),v:r.n}));
+h+=`<div class="card"><b>تسجيلات جديدة (14 يومًا)</b>${bars(su,'g1')}</div>`;
+const rv=s.revday||[];if(rv.length){const tot={};rv.forEach(r=>tot[r.cur||'']=(tot[r.cur||'']||0)+Number(r.cents||0));const main=Object.keys(tot).sort((a,b)=>tot[b]-tot[a])[0],m={};rv.filter(r=>(r.cur||'')==main).forEach(r=>m[r.d]=Number(r.cents||0));
+const rows=(s.signups||[]).map(r=>({l:dte(r.d),v:m[r.d]||0}));h+=`<div class="card"><b>المبيعات اليومية (${esc(main||'')})</b>${bars(rows,'g2',v=>Math.round(v/100))}</div>`}
+return h}
+
+/* ---------- الشحن ---------- */
+function vPay(){const seg=`<div class="seg"><button class="${S.ptab=='new'?'on':''}" data-a="ptab" data-t="new">المعلّقة (${S.cnt.pay})</button><button class="${S.ptab=='arch'?'on':''}" data-a="ptab" data-t="arch">الأرشيف</button></div>`;
+if(S.ptab=='arch'){if(S.archErr)return seg+`<div class="warn">تعذر تحميل الأرشيف: ${esc(S.archErr)}<br>شغّل ملف admin-setup.sql.</div>`;
+return seg+(S.arch.length?S.arch.map((r,i)=>{const st=STS[r.status]||[r.status||'—',''];return item(chip('coin',r.status=='rejected'?'#DC2626':'#16A34A'),esc(r.name||'مستخدم'),`${r.coins!=null?num(r.coins)+' عملة · ':''}${r.amount_cents!=null?money(r.amount_cents,r.currency)+' · ':''}${esc(r.ref||'')} · ${ago(r.created_at)}`,pill(st[0],st[1]),`data-a="aopen" data-i="${i}"`)}).join(''):empty('لا يوجد أرشيف بعد','doc'))}
+return seg+(S.list.length?S.list.map((r,i)=>item(chip('coin','#16A34A'),esc(r.name||'مستخدم'),`${num(r.coins)} عملة · ${money(r.amount_cents,r.currency)}${r.created_at?' · منذ '+ago(r.created_at):''}`,`<span style="color:var(--m)">${ic('chev',20)}</span>`,`data-a="popen" data-i="${i}"`)).join(''):empty('لا توجد طلبات بانتظار المراجعة'))}
+function vOrder(){const r=S.sub.row,uid=r.user_id||r.user||r.uid;
+return`<div class="card"><div style="display:flex;gap:12px;align-items:center">${chip('coin','#16A34A')}<div class="tx"><b style="font-size:19px">${num(r.coins)} عملة</b><small>${esc(r.name||'مستخدم')}</small></div></div>
+<div class="kv"><span>المبلغ</span><b>${money(r.amount_cents,r.currency)}${r.price_yer?' · '+num(r.price_yer)+' ر.ي':''}</b></div><div class="kv"><span>رقم العملية</span><b style="user-select:all">${esc(r.ref)}</b></div>${r.method?`<div class="kv"><span>طريقة الدفع</span><b>${esc(r.method)}</b></div>`:''}<div class="kv"><span>منذ</span><b>${ago(r.created_at)}</b></div></div>
+<div class="card"><b>صورة الإيصال</b>${r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener"><img class="big" src="${esc(r.url)}" alt=""></a>`:`<div class="warn" style="margin-top:10px">لا توجد صورة إيصال</div>`}<small style="display:block;color:var(--m);margin-top:8px">الرابط مؤقت (15 دقيقة)، حدّث الصفحة إن انتهى.</small></div>
+${uid?'':'<div class="warn">لن يصل إشعار للمستخدم لأن الطلب لا يحمل معرّف الحساب.</div>'}
+<div class="acts"><button class="btn gr" data-a="pyes">${ic('check',20)}اعتماد وإضافة العملات</button><button class="btn red" data-a="pno">${ic('x',20)}رفض</button></div>`}
+function vArch(){const r=S.sub.row,st=STS[r.status]||[r.status||'—',''];
+return`<div class="card"><div style="display:flex;gap:12px;align-items:center">${chip('coin',r.status=='rejected'?'#DC2626':'#16A34A')}<div class="tx"><b style="font-size:19px">${r.coins!=null?num(r.coins)+' عملة':'طلب شحن'}</b><small>${esc(r.name||'مستخدم')}</small></div>${pill(st[0],st[1])}</div>
+${r.amount_cents!=null?`<div class="kv"><span>المبلغ</span><b>${money(r.amount_cents,r.currency)}</b></div>`:''}<div class="kv"><span>رقم العملية</span><b style="user-select:all">${esc(r.ref)}</b></div><div class="kv"><span>التاريخ</span><b>${dte(r.created_at)} · منذ ${ago(r.created_at)}</b></div></div>
+<div class="card"><b>صورة الإيصال</b>${S.sub.url?`<a href="${esc(S.sub.url)}" target="_blank" rel="noopener"><img class="big" src="${esc(S.sub.url)}" alt=""></a>`:`<div class="warn" style="margin-top:10px">${S.sub.urlLoading?'جارٍ التحميل…':'الإيصال غير متاح'}</div>`}</div>`}
+async function loadPay(){const r=await sb.rpc('admin_orders');if(r.error)throw r.error;
+const rows=r.data||[],paths=rows.map(x=>x.receipt_path).filter(Boolean);
+if(paths.length){const{data:u}=await sb.storage.from('receipts').createSignedUrls(paths,900);(u||[]).forEach(x=>{const o=rows.find(y=>y.receipt_path==x.path);if(o)o.url=x.signedUrl})}
+S.list=rows;S.cnt.pay=rows.length;
+if(S.ptab=='arch'){const a=await sb.rpc('admin_orders_archive',{p_limit:100});S.archErr=a.error?msg(a.error):null;S.arch=a.data||[]}}
+async function payDecide(ok){const r=S.sub.row;if(S.act)return;let note='';
+if(ok){if(!await ask('اعتماد الطلب',`تأكد أن المبلغ وصل فعلًا إلى محفظتك.<br>ستُضاف <b>${num(r.coins)}</b> عملة إلى <b>${esc(r.name||'المستخدم')}</b>.`,'اعتماد وإضافة العملات'))return}
+else{const v=await dlg({title:'رفض الطلب',icon:'x',danger:true,ok:'رفض الطلب',text:'اكتب سببًا اختياريًا يصل للمستخدم في إشعار.',fields:[{k:'note',ph:'سبب الرفض (اختياري)'}]});if(!v)return;note=v.note||''}
+await once(async()=>{const{error}=await sb.rpc(ok?'approve_order':'reject_order',{p_order:r.id});
+if(error)return toast('تعذر التنفيذ: '+msg(error));
+logAct(ok?'approve_order':'reject_order',r.id,{name:r.name,coins:r.coins,ref:r.ref});
+const uid=r.user_id||r.user||r.uid;let pushed=false;
+if(uid){const n=await sendPush({audience:'user',user_id:uid,title:ok?'تمت إضافة عملاتك':'تعذر قبول طلب الشحن',body:ok?`أُضيفت ${num(r.coins)} عملة إلى رصيدك. شكرًا لك!`:(note||'تم رفض طلب الشحن. تواصل معنا إن كان هناك خطأ.')});pushed=n.ok}
+toast(ok?'تمت إضافة العملات':'تم رفض الطلب');if(uid&&!pushed)setTimeout(()=>toast('تم القرار، لكن تعذر إرسال الإشعار'),3100);
+S.sub=null;load()})}
+
+/* ---------- المستخدمون ---------- */
+function vUsers(){return`<div style="position:relative"><input class="fld" id="uq" placeholder="ابحث باسم الحساب" value="${esc(S.uq)}" autocomplete="off" style="margin:0 0 12px;padding-inline-start:42px"><span style="position:absolute;inset-inline-start:13px;top:12px;color:var(--m)">${ic('search',20)}</span></div><div id="ulist">${ulist()}</div>`}
+function ulist(){if(S.ubusy)return loading;return S.users.length?S.users.map((p,i)=>item(av(p),esc(p.name),`${esc(p.city||'—')} · انضم ${dte(p.created_at)}${p._ban?' · محظور':''}`,p._ban?pill('محظور','bad'):(p._w!=null?`<b>${num(p._w)}</b>${ic('coin',16)}`:''),`data-a="uopen" data-i="${i}"`)).join(''):empty('لا توجد نتائج','users')}
+async function loadUsers(){S.ubusy=true;const q=S.uq.replace(/[%_,()]/g,' ').trim();
+let r=sb.from('profiles').select('*').order('created_at',{ascending:false}).limit(40);if(q)r=r.ilike('name','%'+q+'%');const{data,error}=await r;
+if(error)throw error;S.users=data||[];const ids=S.users.map(p=>p.id);
+if(ids.length){const[w,b]=await Promise.all([sb.rpc('admin_wallets',{p_ids:ids}),sb.from('banned_users').select('user_id').in('user_id',ids)]);
+const wm={};(w.data||[]).forEach(x=>wm[x.user_id]=x.balance);const bs=new Set((b.data||[]).map(x=>x.user_id));S.users.forEach(p=>{p._w=wm[p.id]!=null?wm[p.id]:null;p._ban=bs.has(p.id)})}
+S.ubusy=false}
+async function openUser(id,p){S.sub={k:'user',p:p||{id,name:'…'},w:null,ban:null,model:false,loading:true};render();
+if(!p){const{data}=await sb.from('profiles').select('*').eq('id',id).maybeSingle();if(S.sub&&S.sub.k=='user')S.sub.p=data||{id,name:'حساب محذوف'}}
+const[w,b,m]=await Promise.all([sb.rpc('admin_wallets',{p_ids:[id]}),sb.from('banned_users').select('*').eq('user_id',id).maybeSingle(),sb.from('models').select('user_id').eq('user_id',id).maybeSingle()]);
+if(!S.sub||S.sub.k!='user'||S.sub.p.id!=id)return;S.sub.w=(w.data||[])[0]||null;S.sub.wErr=w.error?msg(w.error):null;S.sub.ban=b.data||null;S.sub.model=!!m.data;S.sub.loading=false;render()}
+function vUser(){const u=S.sub,p=u.p,w=u.w||{};
+return`<div class="card" style="text-align:center">${av(p,'lg')}<h2 style="margin-top:10px">${esc(p.name)}</h2><div style="color:var(--m)">${esc(p.city||'')}</div><div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">${u.ban?pill('محظور','bad'):pill('نشط','ok')}${u.model?pill('موديل'):''}${p.birth_year?pill('مواليد '+p.birth_year):''}</div></div>
+<div class="grid2"><div class="stat">${chip('coin','#0EA5E9')}<b>${u.loading?'…':num(w.balance)}</b><small>الرصيد الحالي</small></div><div class="stat">${chip('gift','#EC4899')}<b>${u.loading?'…':num(w.earned_total)}</b><small>أرباح الهدايا</small></div></div>
+${u.wErr?`<div class="warn">تعذر قراءة الرصيد: ${esc(u.wErr)}</div>`:''}
+<div class="card"><div class="kv"><span>تاريخ الانضمام</span><b>${dte(p.created_at)}</b></div><div class="kv"><span>آخر ظهور</span><b>${p.last_seen?'منذ '+ago(p.last_seen):'—'}</b></div>${p.bio?`<div class="kv"><span>النبذة</span><b style="text-align:end">${esc(p.bio)}</b></div>`:''}${u.ban&&u.ban.reason?`<div class="kv"><span>سبب الحظر</span><b>${esc(u.ban.reason)}</b></div>`:''}</div>
+<div class="acts"><button class="btn gr" data-a="u-add">${ic('plus',20)}إضافة عملات</button><button class="btn gh" data-a="u-sub">${ic('minus',20)}خصم عملات</button><button class="btn gh" data-a="u-ntf">${ic('bell',20)}إرسال إشعار</button></div>
+<div class="acts">${u.ban?`<button class="btn gh" data-a="u-unban">${ic('check',20)}رفع الحظر</button>`:`<button class="btn gh dn" data-a="u-ban">${ic('ban',20)}حظر الحساب</button>`}<button class="btn gh dn" data-a="u-del">${ic('trash',20)}حذف الحساب</button></div>`}
+async function adjust(sign){const u=S.sub;if(S.act)return;
+const v=await dlg({title:sign>0?'إضافة عملات':'خصم عملات',icon:'coin',danger:sign<0,ok:sign>0?'إضافة':'خصم',text:`الحساب: <b>${esc(u.p.name)}</b>`,fields:[{k:'amt',ph:'عدد العملات',type:'number'},{k:'why',ph:'السبب (مطلوب)'}]});if(!v)return;
+const n=Math.floor(Number(v.amt));if(!(n>0))return toast('أدخل عددًا صحيحًا أكبر من صفر');if(!v.why)return toast('اكتب السبب');
+await once(async()=>{const{data,error}=await sb.rpc('admin_adjust_coins',{p_user:u.p.id,p_delta:sign*n,p_reason:v.why});
+if(error)return toast(/insufficient/.test(msg(error))?'الرصيد غير كافٍ للخصم':'تعذر التنفيذ: '+msg(error));
+toast('الرصيد الجديد: '+num(data));u.w=Object.assign({},u.w||{},{balance:data});
+sendPush({audience:'user',user_id:u.p.id,title:sign>0?'أُضيفت عملات إلى رصيدك':'تم تعديل رصيدك',body:sign>0?`أُضيفت ${num(n)} عملة إلى رصيدك.`:`تم خصم ${num(n)} عملة من رصيدك.`});render()})}
+async function banUser(id,name){if(S.act)return;const v=await dlg({title:'حظر الحساب',icon:'ban',danger:true,ok:'حظر',text:`سيُمنع <b>${esc(name)}</b> من إرسال الرسائل والبث، وسيُنهى بثه الحالي.`,fields:[{k:'why',ph:'سبب الحظر'}]});if(!v)return;
+await once(async()=>{const{error}=await sb.rpc('admin_ban',{p_user:id,p_reason:v.why||null});if(error)return toast('تعذر الحظر: '+msg(error));toast('تم حظر الحساب');if(S.sub&&S.sub.k=='user'&&S.sub.p.id==id)S.sub.ban={user_id:id,reason:v.why};render()})}
+async function unbanUser(){const u=S.sub;if(S.act||!await ask('رفع الحظر',`رفع الحظر عن <b>${esc(u.p.name)}</b>؟`,'رفع الحظر'))return;
+await once(async()=>{const{error}=await sb.rpc('admin_unban',{p_user:u.p.id});if(error)return toast('تعذر التنفيذ: '+msg(error));u.ban=null;toast('تم رفع الحظر');render()})}
+async function delUser(){const u=S.sub;if(S.act)return;const v=await dlg({title:'حذف الحساب نهائيًا',icon:'trash',danger:true,ok:'حذف نهائي',text:`سيُحذف حساب <b>${esc(u.p.name)}</b> وكل بياناته ولا يمكن التراجع.<br>اكتب اسم الحساب للتأكيد.`,fields:[{k:'nm',ph:'اسم الحساب'}]});if(!v)return;
+if(v.nm!==u.p.name)return toast('الاسم غير مطابق');
+await once(async()=>{const{error}=await sb.rpc('admin_delete_user',{p_user:u.p.id});if(error)return toast('تعذر الحذف: '+msg(error));toast('تم حذف الحساب');S.sub=null;load()})}
+
+/* ---------- الإشعارات ---------- */
+function vNtf(){const f=S.nf;
+const pick=f.aud=='user'?`<label class="lbl">الحساب</label>${f.user?`<div class="item" style="margin:8px 0 0;box-shadow:none;background:var(--bg)">${av(f.user)}<div class="tx"><b>${esc(f.user.name)}</b><small>${esc(f.user.city||'')}</small></div><button class="btn sm gh" data-a="ntf-clear">تغيير</button></div>`:`<input class="fld" id="nt-q" placeholder="ابحث باسم الحساب" value="${esc(f.q)}" autocomplete="off"><div id="ures">${resHtml()}</div>`}`:'';
+return`<div class="card"><div style="display:flex;gap:10px;align-items:center">${chip('bell','#7C3AED')}<b style="font-size:17px">إشعار جديد</b></div>
+<label class="lbl">المستلمون</label><select class="fld" id="nt-a">${Object.keys(AUD).map(k=>`<option value="${k}"${k==f.aud?' selected':''}>${AUD[k]}</option>`).join('')}</select>${pick}
+<label class="lbl">العنوان</label><input class="fld" id="nt-t" maxlength="50" placeholder="عنوان قصير" value="${esc(f.title)}">
+<label class="lbl">النص</label><textarea class="fld" id="nt-b" rows="3" maxlength="160" placeholder="نص الإشعار">${esc(f.body)}</textarea>
+<div class="nt"><img src="icon-192.png" alt=""><div class="tx"><b id="pv-t">${esc(f.title||'عنوان الإشعار')}</b><small id="pv-b" style="white-space:normal">${esc(f.body||'هكذا سيظهر الإشعار على جهاز المستخدم')}</small></div></div>
+<div class="acts"><button class="btn" data-a="ntf-send" id="nt-s"${f.sending?' disabled':''}>${ic('send',20)}إرسال الإشعار</button></div>
+<small style="display:block;color:var(--m);margin-top:10px">يصل للأجهزة التي فعّلت الإشعارات خارج التطبيق، ويُحفظ في السجل.</small></div>
+<div class="sec"><span>آخر الإشعارات</span></div>${S.hist.length?S.hist.map(h=>item(chip('bell','#A855F7'),esc(h.title),`${esc(h.body)}<br>${AUD[h.audience]||''} · منذ ${ago(h.created_at)}`,'')).join(''):empty('لا توجد إشعارات سابقة','bell')}`}
+function resHtml(){const r=S.nf.res;return r.length?r.map((p,i)=>item(av(p),esc(p.name),esc(p.city||''),'',`data-a="ntf-pick" data-i="${i}" style="margin:8px 0 0"`)).join(''):(S.nf.q.trim().length>=2?'<div class="empty" style="padding:14px">لا نتائج</div>':'')}
+async function loadHist(){const r=await sb.from('announcements').select('id,title,body,audience,created_at').order('id',{ascending:false}).limit(30);if(r.error)throw r.error;S.hist=r.data||[]}
+async function sendPush(p){try{const{data,error}=await sb.functions.invoke(PUSH_FN,{body:p});if(error)throw error;return Object.assign({ok:true},data||{})}
+catch(e){let m=msg(e);try{if(e.context&&e.context.json){const j=await e.context.json();if(j&&j.error)m=String(j.error)}}catch(_){}return{ok:false,err:m}}}
+async function ntfSend(){const f=S.nf;if(f.sending)return;const title=f.title.trim(),text=f.body.trim();
+if(!title||!text)return toast('اكتب العنوان والنص');if(f.aud=='user'&&!f.user)return toast('اختر الحساب أولًا');
+const who=f.aud=='user'?f.user.name:AUD[f.aud];
+if(!await ask('إرسال الإشعار',`سيُرسل الإشعار إلى <b>${esc(who)}</b>.`,'إرسال'))return;
+f.sending=true;const bt=$('#nt-s');if(bt)bt.disabled=true;
+const p={audience:f.aud,title,body:text};if(f.aud=='user')p.user_id=f.user.id;
+const r=await sendPush(p);f.sending=false;if(bt)bt.disabled=false;
+if(!r.ok)return toast('تعذر الإرسال: '+r.err);
+f.title='';f.body='';toast(r.total?`أُرسل إلى ${r.sent} جهاز`+(r.failed?` (فشل ${r.failed})`:''):'حُفظ الإشعار، لكن لا توجد أجهزة مفعّلة حاليًا');
+await loadHist().catch(()=>{});render()}
+let qt=0;
+async function findProfiles(q){q=q.replace(/[%_,()]/g,' ').trim();if(q.length<2)return[];const{data}=await sb.from('profiles').select('id,name,avatar_url,city').ilike('name','%'+q+'%').limit(8);return data||[]}
+
+/* ---------- طلبات الموديلز / الموديلز / البثوث ---------- */
+async function withProfiles(list,key){if(!list.length)return;const ids=[...new Set(list.map(x=>x[key]))],{data}=await sb.from('profiles').select('id,name,avatar_url,city').in('id',ids),m={};(data||[]).forEach(q=>m[q.id]=q);list.forEach(x=>x.profiles=m[x[key]]||null)}
+async function loadReqs(){const r=await sb.from('model_requests').select('*').eq('status','pending').order('id');if(r.error)throw r.error;S.list=r.data||[];S.cnt.reqs=S.list.length;await withProfiles(S.list,'user_id')}
+async function loadModels(){const r=await sb.from('models').select('user_id,approved_at');if(r.error)throw r.error;S.list=r.data||[];await withProfiles(S.list,'user_id')}
+async function loadLive(){const r=await sb.from('lives').select('*').is('ended_at',null).order('id',{ascending:false});if(r.error)throw r.error;S.list=r.data||[];await withProfiles(S.list,'host')}
+function vReqs(){return S.list.length?S.list.map((r,i)=>item(av(r.profiles),esc((r.profiles||{}).name),`ميلاد ${esc(r.birth_date)} (عمر ${age(r.birth_date)}) · منذ ${ago(r.created_at)}`,`<span style="color:var(--m)">${ic('chev',20)}</span>`,`data-a="ropen" data-i="${i}"`)).join(''):empty('لا توجد طلبات','idcard')}
+function vReq(){const r=S.sub.row,p=r.profiles||{};
+return`<div class="card" style="display:flex;gap:12px;align-items:center">${av(p)}<div class="tx"><b>${esc(p.name)}</b><small>${esc(p.city||'')} · ميلاد ${esc(r.birth_date)} (عمر ${age(r.birth_date)})</small></div></div>
+<div class="card"><b>صورة الهوية</b>${S.sub.img?`<img class="big" src="${esc(S.sub.img)}" alt="">`:`<div class="empty" style="padding:30px"><div class="spin"></div></div>`}<small style="display:block;color:var(--m);margin-top:8px">تُحذف الصورة تلقائيًا بعد القرار.</small></div>
+<div class="card"><b>الصورة الشخصية</b>${p.avatar_url?`<img class="big" src="${esc(p.avatar_url)}" alt="">`:'<div class="warn" style="margin-top:10px">لا توجد صورة شخصية</div>'}</div>
+<div class="acts"><button class="btn gr" data-a="ryes">${ic('check',20)}موافقة</button><button class="btn red" data-a="rno">${ic('x',20)}رفض</button></div>`}
+async function reqDecide(ok){const r=S.sub.row;if(S.act)return;let note='';
+if(ok){if(!await ask('الموافقة على الطلب','سيُصبح الحساب موديلز ويمكنه البث.','موافقة'))return}
+else{const v=await dlg({title:'رفض الطلب',icon:'x',danger:true,ok:'رفض',text:'سبب الرفض يظهر للمستخدمة.',fields:[{k:'note',ph:'سبب الرفض (إلزامي)'}]});if(!v)return;if(!v.note)return toast('اكتب سبب الرفض');note=v.note}
+await once(async()=>{const{data,error}=await sb.from('model_requests').update({status:ok?'approved':'rejected',note:note||null}).eq('id',r.id).select();
+if(error||!(data||[]).length)return toast('تعذر حفظ القرار');
+try{await sb.storage.from('verify').remove([r.id_path])}catch(e){}
+logAct(ok?'model_approve':'model_reject',r.user_id,{name:(r.profiles||{}).name});
+sendPush({audience:'user',user_id:r.user_id,title:ok?'تمت الموافقة على طلبك':'تعذر قبول طلبك',body:ok?'يمكنك الآن بدء البث المباشر.':note});
+toast(ok?'تمت الموافقة':'تم الرفض');S.sub=null;load()})}
+function vModels(){return S.list.length?S.list.map(m=>item(av(m.profiles),esc((m.profiles||{}).name),`معتمدة منذ ${ago(m.approved_at)}`,`<button class="btn sm gh dn" data-a="revoke" data-id="${esc(m.user_id)}">إلغاء</button>`)).join(''):empty('لا يوجد موديلز','star')}
+function vLive(){return S.list.length?S.list.map(l=>item(chip('live','#EF4444'),esc(l.title),`${esc((l.profiles||{}).name)} · منذ ${ago(l.started_at)}${l.viewers!=null?' · '+num(l.viewers)+' مشاهد':''}`,`<button class="btn sm red" data-a="endlive" data-id="${esc(l.id)}">إنهاء</button>`)).join(''):empty('لا توجد بثوث الآن','live')}
+async function endLive(id){if(!await ask('إنهاء البث','سيتوقف البث فورًا.','إنهاء',true))return;
+const{data,error}=await sb.from('lives').update({ended_at:new Date().toISOString()}).eq('id',id).select();if(error||!(data||[]).length)return toast('تعذر الإنهاء');logAct('end_live',id);toast('تم إنهاء البث');load()}
+async function revoke(id){if(!await ask('إلغاء صلاحية البث','ستفقد هذه الحسابات صلاحية البث ويُنهى بثها الحالي.','إلغاء الصلاحية',true))return;
+await sb.from('models').delete().eq('user_id',id);await sb.from('lives').update({ended_at:new Date().toISOString()}).eq('host',id).is('ended_at',null);logAct('model_revoke',id);toast('تم الإلغاء');load()}
+
+/* ---------- البلاغات ---------- */
+async function loadRep(){const r=await sb.from('reports').select('*').eq('handled',false).order('id',{ascending:false}).limit(100);if(r.error)throw r.error;S.list=r.data||[];S.cnt.rep=S.list.length;
+const u=new Set(),l=new Set(),rm=new Set();S.list.forEach(x=>{if(x.reporter)u.add(x.reporter);const t=x.target[0],id=x.target.slice(2);if(t=='u')u.add(id);else if(t=='l')l.add(id);else if(t=='r')rm.add(id)});
+const[p,q,z]=await Promise.all([u.size?sb.from('profiles').select('id,name,avatar_url,city').in('id',[...u]):{data:[]},l.size?sb.from('lives').select('id,title,host').in('id',[...l]):{data:[]},rm.size?sb.from('rooms').select('id,name').in('id',[...rm]):{data:[]}]);
+S.nm={};(p.data||[]).forEach(x=>S.nm['u:'+x.id]=x);(q.data||[]).forEach(x=>S.nm['l:'+x.id]=x);(z.data||[]).forEach(x=>S.nm['r:'+x.id]=x)}
+function vRep(){return S.list.length?S.list.map((r,i)=>{const t=r.target[0],id=r.target.slice(2),o=S.nm[r.target]||{},ty=t=='u'?['مستخدم','users','#7C3AED']:t=='r'?['غرفة','hash','#0EA5E9']:['بث','live','#EF4444'],nm=t=='u'?o.name:t=='r'?o.name:o.title,who=(S.nm['u:'+r.reporter]||{}).name;
+return`<div class="card"><div style="display:flex;gap:12px;align-items:center">${chip(ty[1],ty[2])}<div class="tx"><b>${ty[0]}: ${esc(nm||'محذوف')}</b><small>بلاغ من ${esc(who||'؟')} · منذ ${ago(r.created_at)}</small></div></div>
+<div class="acts">${t=='u'?`<button class="btn sm gh" data-a="rep-user" data-id="${esc(id)}">${ic('user',18)}الحساب</button><button class="btn sm gh dn" data-a="rep-ban" data-id="${esc(id)}" data-i="${i}">${ic('ban',18)}حظر</button>`:''}${t=='r'?`<button class="btn sm gh" data-a="rep-msgs" data-id="${esc(id)}">${ic('chat',18)}الرسائل</button><button class="btn sm gh dn" data-a="rep-room" data-id="${esc(id)}">${ic('trash',18)}حذف الغرفة</button>`:''}${t=='l'?`<button class="btn sm gh dn" data-a="endlive" data-id="${esc(id)}">${ic('x',18)}إنهاء البث</button>`:''}<button class="btn sm gr" data-a="handled" data-id="${esc(r.id)}">${ic('check',18)}تمت المعالجة</button></div></div>`}).join(''):empty('لا توجد بلاغات مفتوحة','flag')}
+async function showMsgs(id){const{data}=await sb.from('messages').select('sender,content,created_at').eq('room_id',id).order('created_at',{ascending:false}).limit(8);const rows=data||[];
+const ids=[...new Set(rows.map(x=>x.sender))],{data:ps}=ids.length?await sb.from('profiles').select('id,name').in('id',ids):{data:[]},m={};(ps||[]).forEach(x=>m[x.id]=x.name);
+await dlg({title:'آخر رسائل الغرفة',icon:'chat',ok:'إغلاق',noCancel:true,text:rows.length?rows.map(x=>`<div class="msg"><small>${esc(m[x.sender]||'؟')} · منذ ${ago(x.created_at)}</small><br>${esc(x.content)}</div>`).join(''):'لا توجد رسائل'})}
+async function delRoom(id,name){if(!await ask('حذف الغرفة',`ستُحذف الغرفة${name?' <b>'+esc(name)+'</b>':''} وكل رسائلها نهائيًا.`,'حذف',true))return;
+const{data,error}=await sb.from('rooms').delete().eq('id',id).select();if(error||!(data||[]).length)return toast('تعذر الحذف: تأكد من تشغيل ملف SQL');logAct('delete_room',id,{name});toast('تم حذف الغرفة');load()}
+
+/* ---------- الهدايا والغرف ---------- */
+function vGifts(){return`<div class="acts" style="margin:0 0 12px"><button class="btn" data-a="ed-new" data-t="gf">${ic('plus',20)}هدية جديدة</button></div>`+(S.gifts.length?S.gifts.map((g,i)=>item(`<span class="chipi" style="background:var(--l);font-size:24px">${esc(g.emoji)}</span>`,esc(g.name),`${num(g.price)} عملة`,'',`data-a="ed-edit" data-t="gf" data-i="${i}"`)).join(''):empty('لا توجد هدايا','gift'))}
+function vRooms(){return`<div class="acts" style="margin:0 0 12px"><button class="btn" data-a="ed-new" data-t="rm">${ic('plus',20)}غرفة جديدة</button></div>`+(S.rooms.length?S.rooms.map(r=>item(chip('hash','#0EA5E9'),esc(r.name),esc(r.tag||'بدون وسم'),`<button class="btn sm gh dn" data-a="room-del" data-id="${esc(r.id)}" data-n="${esc(r.name)}">${ic('trash',18)}</button>`)).join(''):empty('لا توجد غرف','hash'))}
+
+/* ---------- الإعدادات: باقات وحسابات ---------- */
+function vCfg(){const C=S.cfg;
+const pk=C.pk.length?C.pk.map((k,i)=>item(chip('coin','#0EA5E9'),`${num(k.coins)} عملة`,`${money(k.price_cents,k.currency)}${k.price_yer?' · '+num(k.price_yer)+' ر.ي':''}${k.label?' · '+esc(k.label):''}`,`${pill(k.active?'مفعّلة':'موقوفة',k.active?'ok':'bad')}<button class="btn sm gh" data-a="cfg-tog" data-t="pk" data-i="${i}">${k.active?'إيقاف':'تفعيل'}</button>`,`data-a="ed-edit" data-t="pk" data-i="${i}"`)).join(''):empty('لا توجد باقات','coin');
+const ac=C.ac.length?C.ac.map((k,i)=>item(chip('shield','#16A34A'),esc(k.label),`${esc(k.number)} · ${esc(k.holder)}`,`${pill(k.active?'مفعّل':'موقوف',k.active?'ok':'bad')}<button class="btn sm gh" data-a="cfg-tog" data-t="ac" data-i="${i}">${k.active?'إيقاف':'تفعيل'}</button>`,`data-a="ed-edit" data-t="ac" data-i="${i}"`)).join(''):empty('لا توجد حسابات دفع','shield');
+return`<div class="sec"><span>باقات العملات</span><button class="btn sm" data-a="ed-new" data-t="pk">${ic('plus',16)}باقة</button></div>${pk}<div class="sec"><span>حسابات استلام الأموال</span><button class="btn sm" data-a="ed-new" data-t="ac">${ic('plus',16)}حساب</button></div>${ac}<div class="warn">الباقات والحسابات الموقوفة لا تظهر للمستخدمين في شاشة الشحن.</div>`}
+const ED={
+pk:{t:'باقة',tb:'coin_packages',act:1,F:[['coins','عدد العملات','number'],['price','السعر بوحدة العملة (مثل 4.99)','number'],['currency','العملة','text','ltr'],['price_yer','السعر بالريال اليمني (اختياري)','number'],['label','وسم (اختياري، مثل: الأكثر طلبًا)']],
+get:r=>({coins:r.coins,price:r.price_cents!=null?(r.price_cents/100).toFixed(2):'',currency:r.currency||'USD',price_yer:r.price_yer||'',label:r.label||''}),
+put:v=>{const coins=parseInt(v.coins,10),pc=Math.round(parseFloat(v.price)*100);if(!(coins>0))return'أدخل عدد العملات';if(!(pc>=0))return'أدخل السعر';return{coins,price_cents:pc,currency:(v.currency||'USD').toUpperCase(),price_yer:v.price_yer?parseInt(v.price_yer,10):null,label:v.label||null}},sv:'package_save',dl:'package_delete'},
+ac:{t:'حساب دفع',tb:'pay_accounts',act:1,F:[['method','المعرّف (إنجليزي، مثل kuraimi)','text','ltr'],['label','الاسم الظاهر'],['number','رقم الحساب / المحفظة','text','ltr'],['holder','اسم صاحب الحساب']],
+get:r=>({method:r.method||'',label:r.label||'',number:r.number||'',holder:r.holder||''}),
+put:v=>{if(!/^[a-z0-9_-]{2,30}$/i.test(v.method))return'المعرّف: حروف إنجليزية وأرقام فقط';if(!v.label||!v.number||!v.holder)return'أكمل كل الحقول';return{method:v.method,label:v.label,number:v.number,holder:v.holder}},sv:'account_save',dl:'account_delete'},
+gf:{t:'هدية',tb:'gift_catalog',F:[['emoji','الرمز (إيموجي)'],['name','اسم الهدية'],['price','السعر بالعملات','number']],
+get:r=>({emoji:r.emoji||'',name:r.name||'',price:r.price||''}),
+put:v=>{const price=parseInt(v.price,10);if(!v.emoji||!v.name)return'أدخل الرمز والاسم';if(!(price>0))return'أدخل السعر';const o={emoji:v.emoji,name:v.name,price};if(v.id)o.id=v.id;return o},sv:'gift_save',dl:'gift_delete'},
+rm:{t:'غرفة',tb:'rooms',F:[['name','اسم الغرفة'],['tag','الوسم (اختياري)']],get:r=>({name:r.name||'',tag:r.tag||''}),
+put:v=>{if(v.name.length<2)return'اسم الغرفة حرفان على الأقل';return{name:v.name,tag:v.tag||null}},sv:'create_room',dl:'delete_room'}};
+function edFields(t,row){const E=ED[t],F=E.F.slice();if(t=='gf'&&!row&&S.gifts.some(g=>typeof g.id=='string'&&isNaN(+g.id)))F.unshift(['id','معرّف الهدية (إنجليزي)','text','ltr']);return F}
+function vEd(){const e=S.sub,E=ED[e.t],r=e.row?E.get(e.row):{},F=edFields(e.t,e.row);
+return`<div class="card">${F.map(f=>`<label class="lbl">${f[1]}</label><input class="fld" id="e-${f[0]}" type="${f[2]||'text'}" ${f[2]=='number'?'inputmode="decimal" min="0" step="any"':''} ${f[3]=='ltr'?'dir="ltr"':''} value="${esc(r[f[0]]!=null?r[f[0]]:(f[0]=='currency'?'USD':''))}"${e.t=='ac'&&e.row&&f[0]=='method'?' readonly':''}>`).join('')}
+${E.act?`<label class="chk"><input type="checkbox" id="e-active"${e.row?(e.row.active?' checked':''):' checked'}>مفعّل</label>`:''}
+<div class="acts"><button class="btn gr" data-a="ed-save">${ic('check',20)}حفظ</button>${e.row&&e.t!='rm'?`<button class="btn gh dn" data-a="ed-del">${ic('trash',20)}حذف</button>`:''}</div></div>`}
+const edKey=(t,row)=>t=='ac'&&!('id'in row)?'method':'id';
+async function edSave(){const e=S.sub,E=ED[e.t];if(S.act)return;const v={};edFields(e.t,e.row).forEach(f=>v[f[0]]=((($('#e-'+f[0])||{}).value)||'').trim());
+const row=E.put(v);if(typeof row=='string')return toast(row);if(E.act)row.active=!!($('#e-active')||{}).checked;
+await once(async()=>{let r;if(e.row){const k=edKey(e.t,e.row);r=await sb.from(E.tb).update(row).eq(k,e.row[k]).select()}else r=await sb.from(E.tb).insert(row).select();
+if(r.error||!(r.data||[]).length)return toast(r.error&&r.error.code=='23505'?'هذا المعرّف موجود من قبل':'تعذر الحفظ: تأكد من تشغيل ملف SQL');
+logAct(E.sv,e.row?e.row[edKey(e.t,e.row)]:(r.data[0]||{}).id,row);toast('تم الحفظ');S.sub=null;load()})}
+async function edDel(){const e=S.sub,E=ED[e.t];if(S.act||!e.row||!await ask('حذف نهائي','سيُحذف هذا العنصر ولا يمكن التراجع.','حذف',true))return;const k=edKey(e.t,e.row);
+await once(async()=>{const{data,error}=await sb.from(E.tb).delete().eq(k,e.row[k]).select();
+if(error)return toast(error.code=='23503'?'لا يمكن الحذف لوجود بيانات مرتبطة. أوقفه بدلًا من ذلك':'تعذر الحذف');if(!(data||[]).length)return toast('تعذر الحذف');
+logAct(E.dl,e.row[k]);toast('تم الحذف');S.sub=null;load()})}
+async function cfgToggle(t,i){const row=S.cfg[t][i];if(!row||S.act)return;const k=edKey(t=='pk'?'pk':'ac',row),tb=t=='pk'?'coin_packages':'pay_accounts';
+await once(async()=>{const{data,error}=await sb.from(tb).update({active:!row.active}).eq(k,row[k]).select();if(error||!(data||[]).length)return toast('تعذر التحديث');toast(row.active?'تم الإيقاف':'تم التفعيل');await loadCfg().catch(()=>{});render()})}
+async function loadCfg(){const[p,a]=await Promise.all([sb.from('coin_packages').select('*').order('coins'),sb.from('pay_accounts').select('*')]);if(p.error||a.error)throw(p.error||a.error);S.cfg={pk:p.data||[],ac:a.data||[]}}
+
+/* ---------- المديرون والسجل والتشخيص ---------- */
+function vAdmins(){return`<div class="card"><b>إضافة مدير</b><input class="fld" id="aq" placeholder="ابحث باسم الحساب" value="${esc(S.aq)}" autocomplete="off"><div id="ares">${ares()}</div></div><div class="sec"><span>المديرون الحاليون (${S.admins.length})</span></div>${S.admins.map(a=>item(av(a),esc(a.name||'—'),a.user_id==S.user.id?'أنت':'',a.user_id==S.user.id?'':`<button class="btn sm gh dn" data-a="adm-rm" data-id="${esc(a.user_id)}" data-n="${esc(a.name||'')}">إزالة</button>`)).join('')}`}
+function ares(){return S.ares.length?S.ares.map((p,i)=>item(av(p),esc(p.name),esc(p.city||''),`<button class="btn sm" data-a="adm-add" data-i="${i}">إضافة</button>`)).join(''):(S.aq.trim().length>=2?'<div class="empty" style="padding:14px">لا نتائج</div>':'')}
+async function loadAdmins(){const r=await sb.rpc('admin_list_admins');if(r.error)throw r.error;S.admins=r.data||[]}
+function vLog(){return S.logs.length?S.logs.map(l=>item(chip('doc','#64748B'),esc(ACT[l.action]||l.action),`${esc(l.who||'—')}${l.target?' · '+esc(String(l.target).slice(0,30)):''} · منذ ${ago(l.created_at)}`,'')).join(''):empty('لا توجد عمليات مسجّلة','doc')}
+async function loadLog(){const r=await sb.from('admin_log').select('*').order('id',{ascending:false}).limit(100);if(r.error)throw r.error;S.logs=r.data||[];
+const ids=[...new Set(S.logs.map(x=>x.admin_id).filter(Boolean))];if(ids.length){const{data}=await sb.from('profiles').select('id,name').in('id',ids),m={};(data||[]).forEach(x=>m[x.id]=x.name);S.logs.forEach(l=>l.who=m[l.admin_id])}}
+function vDiag(){const d=S.diag||{},row=(l,v,h)=>`<div class="kv"><span>${l}</span><b>${v?pill(String(v===true?'جاهز':v),'ok'):pill('غير موجود','bad')}</b></div>${!v&&h?`<small style="color:var(--m);display:block;margin-bottom:6px">${h}</small>`:''}`;
+return`${S.diagErr?`<div class="warn">تعذر التشخيص: ${esc(S.diagErr)}<br>شغّل ملف admin-setup.sql أولًا.</div>`:''}<div class="card"><b>حالة النظام</b>${row('جدول المحافظ',d.wallet_table,'مطلوب لعرض الرصيد وتعديله')}${row('جدول طلبات الشحن',d.orders_table,'مطلوب للأرشيف والإحصائيات')}${row('جدول اشتراكات الإشعارات',d.push_table,'مطلوب لإرسال الإشعارات')}${row('نظام الحظر',d.banned,'شغّل ملف SQL')}${row('سجل العمليات',d.log,'شغّل ملف SQL')}${row('سجل الإشعارات',d.announcements,'شغّل ملف SQL')}</div>
+<div class="card"><b>اختبار الإشعارات</b><p style="color:var(--m);margin-top:6px">يرسل إشعارًا تجريبيًا إلى حسابك. فعّل الإشعارات خارج التطبيق من جوالك أولًا.</p><div class="acts"><button class="btn" data-a="diag-push">${ic('send',20)}إرسال إشعار تجريبي لي</button></div></div>`}
+
+/* ---------- التحميل ---------- */
+async function refreshCnt(){try{const[o,r,q]=await Promise.all([sb.rpc('admin_orders'),sb.from('reports').select('id',{count:'exact',head:true}).eq('handled',false),sb.from('model_requests').select('id',{count:'exact',head:true}).eq('status','pending')]);S.cnt={pay:(o.data||[]).length,rep:r.count||0,reqs:q.count||0};renderNav()}catch(e){}}
+async function load(){S.busy=true;S.sub=null;S.more=false;render();const p=S.page;
+try{if(p=='home'){const r=await sb.rpc('admin_stats');S.stErr=r.error?msg(r.error):null;S.st=r.data||null}
+else if(p=='pay')await loadPay();else if(p=='users')await loadUsers();else if(p=='ntf')await loadHist();else if(p=='reqs')await loadReqs();else if(p=='models')await loadModels();
+else if(p=='live')await loadLive();else if(p=='rep')await loadRep();else if(p=='cfg')await loadCfg();else if(p=='admins')await loadAdmins();else if(p=='log')await loadLog();
+else if(p=='gifts'){const r=await sb.from('gift_catalog').select('*').order('price');if(r.error)throw r.error;S.gifts=r.data||[]}
+else if(p=='rooms'){const r=await sb.from('rooms').select('*').order('id');if(r.error)throw r.error;S.rooms=r.data||[]}
+else if(p=='diag'){const r=await sb.rpc('admin_diagnose');S.diagErr=r.error?msg(r.error):null;S.diag=r.data||null}}
+catch(e){toast('تعذر التحميل: '+msg(e))}
+S.busy=false;S.ubusy=false;render();if(p!='pay'&&p!='reqs'&&p!='rep')refreshCnt();else renderNav()}
+async function boot(){const{data:{session}}=await sb.auth.getSession();
+if(!session){S.user=null;S.busy=false;return render()}
+S.user=session.user;const{data}=await sb.from('admins').select('user_id').eq('user_id',S.user.id).maybeSingle();S.admin=!!data;
+if(S.admin)return load();S.busy=false;render()}
+
+/* ---------- الأحداث ---------- */
+document.addEventListener('input',e=>{const t=e.target,f=S.nf;
+if(t.id=='nt-t'){f.title=t.value;const p=$('#pv-t');if(p)p.textContent=t.value||'عنوان الإشعار'}
+else if(t.id=='nt-b'){f.body=t.value;const p=$('#pv-b');if(p)p.textContent=t.value||'هكذا سيظهر الإشعار على جهاز المستخدم'}
+else if(t.id=='nt-q'){f.q=t.value;clearTimeout(qt);qt=setTimeout(async()=>{const r=await findProfiles(f.q);if(f.q!==t.value&&f.q!==$('#nt-q').value)return;f.res=r;const e=$('#ures');if(e)e.innerHTML=resHtml()},300)}
+else if(t.id=='uq'){S.uq=t.value;clearTimeout(qt);qt=setTimeout(async()=>{S.ubusy=true;const e=$('#ulist');if(e)e.innerHTML=ulist();try{await loadUsers()}catch(x){toast('تعذر البحث')}S.ubusy=false;const l=$('#ulist');if(l)l.innerHTML=ulist()},350)}
+else if(t.id=='aq'){S.aq=t.value;clearTimeout(qt);qt=setTimeout(async()=>{S.ares=await findProfiles(S.aq);const e=$('#ares');if(e)e.innerHTML=ares()},300)}});
+document.addEventListener('change',e=>{if(e.target.id=='nt-a'){S.nf.aud=e.target.value;S.nf.user=null;S.nf.q='';S.nf.res=[];render()}});
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-a]');if(!b)return;const d=b.dataset;
+switch(d.a){
+case'md-ok':{const v={};document.querySelectorAll('#md [data-f]').forEach(i=>v[i.dataset.f]=i.value.trim());dlgClose(v);break}
+case'md-no':dlgClose(null);break;
+case'google':await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});break;
+case'login':{const{error}=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});if(error)return toast('بيانات الدخول غير صحيحة');boot();break}
+case'out':await sb.auth.signOut();S=fresh();S.busy=false;render();break;
+case'go':S.page=d.k;load();break;
+case'more':S.more=true;render();break;
+case'more-x':S.more=false;render();break;
+case'refresh':S.sub?render():load();break;
+case'back':S.sub=null;render();break;
+case'ptab':S.ptab=d.t;load();break;
+case'popen':S.sub={k:'order',row:S.list[+d.i]};render();break;
+case'aopen':{const r=S.arch[+d.i];S.sub={k:'arch',row:r,url:null,urlLoading:!!r.receipt_path};render();if(r.receipt_path){const{data}=await sb.storage.from('receipts').createSignedUrl(r.receipt_path,600);if(S.sub&&S.sub.row===r){S.sub.url=data&&data.signedUrl;S.sub.urlLoading=false;render()}}break}
+case'pyes':payDecide(true);break;case'pno':payDecide(false);break;
+case'uopen':openUser(S.users[+d.i].id,S.users[+d.i]);break;
+case'u-add':adjust(1);break;case'u-sub':adjust(-1);break;
+case'u-ntf':S.nf.aud='user';S.nf.user=S.sub.p;S.nf.q='';S.nf.res=[];S.page='ntf';load();break;
+case'u-ban':banUser(S.sub.p.id,S.sub.p.name);break;case'u-unban':unbanUser();break;case'u-del':delUser();break;
+case'ntf-send':ntfSend();break;
+case'ntf-pick':S.nf.user=S.nf.res[+d.i];S.nf.res=[];S.nf.q='';render();break;
+case'ntf-clear':S.nf.user=null;render();break;
+case'ropen':{S.sub={k:'req',row:S.list[+d.i],img:null};render();const{data}=await sb.storage.from('verify').createSignedUrl(S.sub.row.id_path,300);if(S.sub&&S.sub.k=='req'){S.sub.img=data&&data.signedUrl;render();if(!S.sub.img)toast('تعذر فتح صورة الهوية')}break}
+case'ryes':reqDecide(true);break;case'rno':reqDecide(false);break;
+case'endlive':endLive(d.id);break;
+case'revoke':revoke(d.id);break;
+case'handled':{const{error}=await sb.from('reports').update({handled:true}).eq('id',d.id);if(error)return toast('تعذر الحفظ');load();break}
+case'rep-user':openUser(d.id);break;
+case'rep-ban':{const o=S.nm['u:'+d.id]||{};banUser(d.id,o.name||'الحساب');break}
+case'rep-msgs':showMsgs(d.id);break;
+case'rep-room':delRoom(d.id,(S.nm['r:'+d.id]||{}).name);break;
+case'room-del':delRoom(d.id,d.n);break;
+case'ed-new':S.sub={k:'ed',t:d.t,row:null};render();break;
+case'ed-edit':S.sub={k:'ed',t:d.t,row:(d.t=='gf'?S.gifts:S.cfg[d.t])[+d.i]};render();break;
+case'ed-save':edSave();break;case'ed-del':edDel();break;
+case'cfg-tog':cfgToggle(d.t,+d.i);break;
+case'adm-add':{const p=S.ares[+d.i];if(!p||!await ask('إضافة مدير',`سيحصل <b>${esc(p.name)}</b> على صلاحيات الإدارة الكاملة.`,'إضافة مدير'))break;
+const{error}=await sb.rpc('admin_set_admin',{p_user:p.id,p_on:true});if(error)return toast('تعذر التنفيذ: '+msg(error));toast('تمت الإضافة');S.aq='';S.ares=[];load();break}
+case'adm-rm':{if(!await ask('إزالة مدير',`إزالة صلاحيات <b>${esc(d.n)}</b>؟`,'إزالة',true))break;const{error}=await sb.rpc('admin_set_admin',{p_user:d.id,p_on:false});if(error)return toast('تعذر التنفيذ: '+msg(error));toast('تمت الإزالة');load();break}
+case'diag-push':{const r=await sendPush({audience:'user',user_id:S.user.id,title:'اختبار الإشعارات',body:'إذا وصلك هذا الإشعار فكل شيء يعمل'});toast(r.ok?(r.total?`أُرسل إلى ${r.sent} جهاز`:'الدالة تعمل، لكن لا توجد أجهزة مفعّلة لحسابك'):'تعذر الإرسال: '+r.err);break}
+}});
+boot();
+</script>
+</body>
+</html>
